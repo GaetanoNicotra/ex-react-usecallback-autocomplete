@@ -1,33 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  // variabili di stato
+  const [query, setQuery] = useState('');
+
+  const [results, setResults] = useState([]);
+
+  // caricamento risultati di ricerca
+  useEffect(() => {
+    if (!query) {
+      {
+        setResults([])
+        return
+      }
+    }
+
+    {
+
+      fetch(`http://localhost:3333/products?search=${query}`)
+        .then(res => res.json())
+        .then(data => setResults(data))
+    }
+  }, [query])
+
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <header>EX - Autocomplete</header>
+      <main>
+        <h2>Cerca qui quello che desideri</h2>
+        <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <div>
+          {results && results.map((q) => {
+            return <div className='dropdown'>
+              <p key={q.id}>{q.name} prezzo = {q.price}</p>
+              <img src={q.image} alt="img-product" />
+            </div>
+
+          })}
+        </div>
+      </main>
     </>
   )
 }
