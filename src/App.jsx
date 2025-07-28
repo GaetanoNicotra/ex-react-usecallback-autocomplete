@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-
+import { useState, useEffect, useCallback } from 'react'
+import { debounce } from 'lodash';
 
 function App() {
 
@@ -8,8 +8,8 @@ function App() {
 
   const [results, setResults] = useState([]);
 
-  // caricamento risultati di ricerca
-  useEffect(() => {
+  // funzione per recuperare i risultati
+  const getData = useCallback(debounce((query) => {
     if (!query) {
       setResults([])
       return
@@ -19,7 +19,13 @@ function App() {
         .then(res => res.json())
         .then(data => setResults(data))
     }
-  }, [query])
+
+  }, 500), [])
+
+  // caricamento risultati di ricerca
+  useEffect(() => {
+    getData(query)
+  }, [query, getData]);
 
   return (
     <>
@@ -29,9 +35,12 @@ function App() {
         <input className='mb-4' type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
         <div className='dropdown'>
           {results && results.map((q) => {
-            return <div >
-              <p key={q.id}>{q.name} prezzo = {q.price}</p>
-
+            return <div key={q.id}>
+              <p>{q.name}</p>
+              <hr />
+              <details> <summary>Dettagli prodotto</summary>
+                {q.price}&#8364;
+              </details>
             </div>
           })}
         </div>
