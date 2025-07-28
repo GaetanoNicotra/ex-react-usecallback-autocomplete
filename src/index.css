@@ -1,0 +1,11 @@
+.dropdown {
+    max-height: 250px;
+    width: 35%;
+    background-color: rgba(100, 175, 175, 0.753);
+    overflow: auto;
+    border-radius: 15px;
+}
+
+input {
+    border-radius: 8px;
+}
