@@ -8,7 +8,10 @@ function App() {
 
   const [results, setResults] = useState([]);
 
+  const [details, setDetails] = useState(null)
+
   // funzione per recuperare i risultati
+  // ottimizata con useCallback() e debounce
   const getData = useCallback(debounce((query) => {
     if (!query) {
       setResults([])
@@ -21,6 +24,19 @@ function App() {
     }
 
   }, 500), [])
+
+  // funzione per caricare i dettagli
+  const recuperoDettagli = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3333/products/${id}`)
+      const data = await res.json()
+      setDetails(data)
+      setResults([])
+    } catch (error) {
+      console.error(error)
+    }
+
+  }
 
   // caricamento risultati di ricerca
   useEffect(() => {
@@ -36,14 +52,21 @@ function App() {
         <div className='dropdown'>
           {results && results.map((q) => {
             return <div key={q.id}>
-              <p>{q.name}</p>
-              <hr />
-              <details> <summary>Dettagli prodotto</summary>
-                {q.price}&#8364;
-              </details>
+              <p className='nome ms-3 mt-3 text-white' onClick={() => recuperoDettagli(q.id)}>{q.name}</p>
             </div>
           })}
         </div>
+        {details && (
+          <div className="card mt-5 p-3">
+            <h4>{details.name}</h4>
+            <h5>{details.brand}</h5>
+            <img src={details.image} alt="img-prodotto" />
+            <h6>{details.price} &#8364;</h6>
+            <p>Color: {details.color}</p>
+            <p>{details.description}</p>
+            <p>Vote: {details.rating}</p>
+          </div>
+        )}
       </main>
     </>
   )

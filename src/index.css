@@ -1,9 +1,10 @@
 .dropdown {
     max-height: 250px;
     width: 35%;
-    background-color: rgba(114, 161, 161, 0.753);
+    background-color: rgba(122, 182, 182, 0.753);
     overflow: auto;
     border-radius: 15px;
+
 }
 
 input {
@@ -11,10 +12,11 @@ input {
     padding: 10px;
 }
 
-p {
-    margin-bottom: 0;
+.nome:hover {
+    background-color: rgb(165, 165, 165);
+    cursor: pointer;
 }
 
-details {
-    margin-bottom: 10px;
+.card {
+    width: 35%;
 }
